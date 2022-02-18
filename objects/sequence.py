@@ -3,8 +3,9 @@ from manim import *
 
 class Sequence(VGroup):
 
-    def __init__(self, *points, **kwargs):
+    def __init__(self, *points, expression=None, **kwargs):
         super().__init__(**kwargs)
+        self.exp = expression
         self.y_lock = 0
         self.add(*points)
     
@@ -24,6 +25,19 @@ class Sequence(VGroup):
         positions[:,0] = seq
         points = [Dot(pos, radius=radius) for pos in positions]
         return Sequence(*points, **kwargs)
+    
+    @staticmethod
+    def on_graph(graph, expr, num=20, radius=.05, **kwargs):
+        seq = expr(np.arange(1, num+1))
+        positions = np.array([
+            graph.get_point_from_function(t) for t in seq
+        ])
+        points = [Dot(pos, radius=radius) for pos in positions]
+        return Sequence(*points, **kwargs)
+
+    def move_to_graph(self, graph):
+        '''graph is a ParametricFunction'''
+
 
     def spread(self, factor, origin=0):
         for dot in self:

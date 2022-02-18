@@ -1,3 +1,4 @@
 .vscode/
 media/
-**/__pycache__/
+scenes/__pycache__/
+objects/__pycache__/

@@ -2,20 +2,24 @@ from manim import *
 from objects.sequence import Sequence
 
 class TestScene(Scene):
+    def pfunc(self, t):
+        return np.array([t, np.cos(3*t), 0])
     def construct(self):
-        zoom = 5
-        fnc = lambda n: zoom - zoom/(np.sqrt(n))
-        seq = Sequence.from_expression(fnc, num=100, radius=0.02)
-        seq.set_fill(BLUE)
-
-        self.play(
-            AnimationGroup(
-                *[FadeIn(dot) for dot in seq],
-                lag_ratio=.001
-            )
+        graph = ParametricFunction(
+            self.pfunc,
+            t_range=np.array([-5,5]),
+            stroke_width=1
         )
-
-        self.play(
-            seq.animate.spread(3, origin=fnc(100))
-        )
+        expr = lambda n: 2*PI/3 - 3/(n+1)
+        seq = Sequence.on_graph(graph, expr, num=50, radius=.05).set_color(BLUE)
+        
+        
+        self.add(graph)
+        self.play(Create(seq), run_time=1.2)
         self.wait()
+
+
+
+
+
+
